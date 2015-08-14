@@ -10,9 +10,7 @@ The MotilityTracking program displays imported coordinate paths as green lines f
 REQUIREMENTS
 ------------
 
-Reliant on Python 3.4 or 2.7 (untested), preferably installed through
-Anaconda Scientific Library (http://continuum.io/downloads#py34) as well
-as several other python plugins:
+Reliant on Python 3.4 or 2.7 (untested), preferably installed through Anaconda Scientific Library (http://continuum.io/downloads#py34) as well as several other python plugins:
 
 Included in Anaconda:
 *	PyQt 		v4	(will not install with 'pip')
@@ -30,11 +28,8 @@ To install plugins, open a command prompt and type 'pip install plugin-name', us
 
 INSTALLATION
 ------------
-To install the MotilityTracking Program, install all of the plugins listed above
-into your python environment, download the MotilityTracking Folder from github
-(https://github.com/BrettJSettle/MotilityTracking) by clicking on the 'Download Zip'
-button on the right sidebar. Extract it to your computer and run by clicking the
-'run.bat' file located inside the MotilityTracking Folder
+To install the MotilityTracking Program, install all of the plugins listed above into your python environment, download the MotilityTracking Folder from github (https://github.com/BrettJSettle/MotilityTracking) by clicking on the 'Download Zip'
+button on the right sidebar. Extract it to your computer and run by clicking the 'run.bat' file located inside the MotilityTracking Folder.
 
 
 USING THE PROGRAM
