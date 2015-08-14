@@ -34,7 +34,30 @@ button on the right sidebar. Extract it to your computer and run by clicking the
 
 USING THE PROGRAM
 -----------------
-IN PROGRESS
+The Menu at the top allows the used to open one or many BIN files,
+add a BIN file to the analysis, import a background image/video, import
+pyFLIKA generated Puff locations (average and individual), generate
+simulated data in a new dock for comparison, and to export data from
+any graph or dock to an excel file.
+
+The window comprises of 2 Docks.
+
+Dock 1 is the plot of all the tracks loaded by the user, as well as a
+background image and/or any other FLIKA points imported. Options below
+allow the user to show/hide the Track lines, points, and mean XY positions.
+There are also options to toggle the background image, and to map the
+distances from mean track locations to the closest mean FLIKA points,
+or to remove respective FLIKA points from the plot.
+	Right Click and drag to create ROIs, which can be used to exclude
+unwanted tracks from the plot.  There is a "Show Options" checkbox which
+allows for extra specializations of tracks to exclude from the analysis.
+
+
+Dock 2 is the Mean Squared Distances Plot, along with a histogram of
+the Mean Lag Distances. The first plot allows for specification of a
+track length cutoff range, to exclude tracks that are too short or too
+long (ie noise or false positives).  The bottom histogram allows the user
+to change the bin count to greater analyze the histogram.
 
 ABOUT
 -----
