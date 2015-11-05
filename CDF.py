@@ -21,7 +21,7 @@ def calculate_cdfs(par_det):
     # While calculating resultant diffusion coefficents they were converted to
     # micro meter squared.
 
-    dfg=[a.fr_length for a in par_det]
+    dfg=[a['fr_length'] for a in par_det]
     max_lag=max(dfg)-1
     #
     ii=len(par_det)
@@ -31,9 +31,9 @@ def calculate_cdfs(par_det):
     # lag. max_lag determined by parameter utl in the main code.
     #
     for jk in range(ii):
-        kk=par_det[jk].fr_length-1 # maximum lag in track jk
+        kk=par_det[jk]['fr_length']-1 # maximum lag in track jk
         for kk1 in range(kk): # for every lag, compile the squared distances that are greater than 0
-            proxy_array=par_det[jk].dist_sqr[kk1]
+            proxy_array=par_det[jk]['dist_sqr'][kk1]
             proxy_array=proxy_array[proxy_array>0]
             cdfs[kk1].rsqr = np.concatenate((cdfs[kk1].rsqr, proxy_array))
     #
@@ -117,9 +117,9 @@ class CDF():
             return self._fits[i]
 
 class CDFWidget(QtGui.QWidget):
-    def __init__(self, cdfs=[]):
+    def __init__(self):
         super(CDFWidget, self).__init__()
-        self.cdfs = cdfs
+        self.tracks = []
         self.cur_lag = 1
         self.plt = pg.PlotWidget()
         self.plt.setWindowTitle("CDF Graph for Lag #1")
@@ -127,17 +127,22 @@ class CDFWidget(QtGui.QWidget):
         it.setLabel('left', text='Cumulative Distribution Function')
         it.setLabel('bottom', text='(SLD)^2 (Pixels^2)')
         self.tab = pg.TableWidget()
-        self.lag_spin = pg.SpinBox(value=1, int=True, minStep=1, step=1, bounds=[1, len(cdfs)])
+        self.lag_spin = pg.SpinBox(value=1, int=True, minStep=1, step=1, bounds=[1, 2])
         self.lag_spin.sigValueChanged.connect(lambda f : self.set_lag(f.value()))
+        loadButton = QtGui.QPushButton('Load CDF Data')
+        loadButton.clicked.connect(self.update)
         grid = QtGui.QGridLayout()
         self.setLayout(grid)
         grid.addWidget(self.plt, 0, 0, 3, 3)
         grid.addWidget(self.tab, 3, 0, 5, 3)
-        grid.addWidget(QtGui.QLabel(text="Lag Number: "), 8, 0)
-        grid.addWidget(self.lag_spin, 8, 1)
+        grid.addWidget(loadButton, 8, 0)
+        grid.addWidget(QtGui.QLabel(text="Lag Number: "), 8, 1)
+        grid.addWidget(self.lag_spin, 8, 2)
         self.lg = self.plt.addLegend(offset=(100, 100))
-        if cdfs != []:
-            self.update()
+
+    def setTracks(self, tracks):
+        self.tracks = tracks
+        self.new_tracks = True
 
     def set_lag(self, new):
         if new > len(self.cdfs):
@@ -146,14 +151,15 @@ class CDFWidget(QtGui.QWidget):
         self.plt.setWindowTitle('CDF Graph for Lag #%s' % new)
         self.update()
 
-
-    def update(self, cdfs=[]):
-        if "cdfs" not in self.__dict__:
-            print("NO CDFS")
+    def update(self):
+        if len(self.tracks) == 0:
+            print("Tracks not loaded to Cumulative Distribution Widget")
             return
-        elif cdfs != []:
-            self.cdfs = cdfs
-            self.lag_spin.setMaximum(len(cdfs) - 1)
+        if self.new_tracks:
+            self.cdfs = calculate_cdfs(self.tracks)
+            self.new_tracks = False
+            self.lag_spin.setMaximum(len(self.cdfs) - 1)
+            
         self.plt.getPlotItem().clear()
         for a in ('Data', 'Exp 1', 'Exp 2', 'Exp 3'):
             self.lg.removeItem(a)
@@ -163,7 +169,8 @@ class CDFWidget(QtGui.QWidget):
         data = []
         columns = ('Diff Coeff 1', 'Diff Coeff 2', 'Diff Coeff 3', 'Weight 1', 'Weight 2', 'Weight 3')
         for i in range(1, 4):
-            self.plt.plot(x=xs, y=cdf[i, 'yfit'], pen=(255 if i == 3 else 0, 255 if i == 2 else 0, 255 if i == 1 else 0), name = "Exp %s" % i)
+            print(cdf[i, 'yfit'])
+            self.plt.addItem(pg.PlotDataItem(x=xs, y=cdf[i, 'yfit'], pen=(255 if i == 3 else 0, 255 if i == 2 else 0, 255 if i == 1 else 0), name = "Exp %s" % i))
             app = [cdf[i, a] for a in columns]
             data.append(tuple(app))
         #self.plt.plot(x = xs, y=cdf.ycdf, pen=None, symbol='t', symbolPen=None, symbolSize=1, symbolBrush=(255, 255, 255), name="Data")
@@ -174,16 +181,3 @@ class CDFWidget(QtGui.QWidget):
 
         data = np.array(data, dtype=[(a, float) for a in columns])
         self.tab.setData(data)
-
-if __name__ == "__main__":
-    name = raw_input("Filename: ")
-    xs = []
-    ys = []
-    for line in open(name, 'r'):
-        x, y = line.split()
-        xs.append(float(x))
-        ys.append(float(y))
-    x = np.array(xs)
-    y = np.array(ys)
-    for i in fit_cdf(x, y):
-        print(i)
