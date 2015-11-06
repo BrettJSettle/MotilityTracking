@@ -50,7 +50,6 @@ def calculate_cdfs(par_det):
         x=cdfs[jk].xcdf
         y=cdfs[jk].ycdf
         for i, vals in enumerate(fit_cdf(x,y)): # pass in x values, percent
-        print(i, vals)
             cdfs[jk].set_exponent_fit(i+1, *vals)
 
     return cdfs
