@@ -50,6 +50,7 @@ def calculate_cdfs(par_det):
         x=cdfs[jk].xcdf
         y=cdfs[jk].ycdf
         for i, vals in enumerate(fit_cdf(x,y)): # pass in x values, percent
+        print(i, vals)
             cdfs[jk].set_exponent_fit(i+1, *vals)
 
     return cdfs
@@ -169,7 +170,7 @@ class CDFWidget(QtGui.QWidget):
         data = []
         columns = ('Diff Coeff 1', 'Diff Coeff 2', 'Diff Coeff 3', 'Weight 1', 'Weight 2', 'Weight 3')
         for i in range(1, 4):
-            print(cdf[i, 'yfit'])
+            print(i, cdf[i, 'yfit'])
             self.plt.addItem(pg.PlotDataItem(x=xs, y=cdf[i, 'yfit'], pen=(255 if i == 3 else 0, 255 if i == 2 else 0, 255 if i == 1 else 0), name = "Exp %s" % i))
             app = [cdf[i, a] for a in columns]
             data.append(tuple(app))

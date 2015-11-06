@@ -16,6 +16,15 @@ import struct, time
 from collections import defaultdict
 # MList will be one array of (structures of arrays)
 
+
+def open_bin(filename):
+	g.m.statusBar().showMessage('Loading {}'.format(os.path.basename(filename)))
+	g.m.settings['filename']=filename
+	t = time.time()
+	mat = bin2mat(filename)
+	g.m.statusBar().showMessage('{} successfully loaded ({} s)'.format(os.path.basename(filename), time.time()-t))
+	return mat
+	
 class BinaryReaderEOFException(Exception):
 	def __init__(self):
 		pass

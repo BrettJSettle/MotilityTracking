@@ -22,7 +22,7 @@ from roi import load_roi, makeROI
 from CDF import *
 
 from histogram import Histogram
-from process.motility_ import create_main_data_struct, bin2mat, calculate_MSD_plot
+from process.motility_ import *
 from process.file_ import *
 
 try:

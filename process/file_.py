@@ -23,7 +23,7 @@ import tifffile
 import json
 import re
 
-__all__ = ['open_file_gui','open_file','save_file_gui','save_file', 'close', 'simulate_distances', 'exportMSD', 'open_bin', 'export_distances', 'import_coords']
+__all__ = ['open_file_gui','open_file','save_file_gui','save_file', 'close', 'simulate_distances', 'exportMSD', 'export_distances', 'import_coords']
 
 def open_file_gui(func, filetypes, prompt='Open File'):
 	filename=g.m.settings['filename']
@@ -179,10 +179,3 @@ def exportMSD(filename):
 	np.savetxt(filename, data, header='X\tY\tError', comments='', delimiter='\t')
 	g.m.statusBar().showMessage('MSD successfully exported ({} s)'.format(os.path.basename(filename), time.time()-t))
 
-def open_bin(filename):
-	g.m.statusBar().showMessage('Loading {}'.format(os.path.basename(filename)))
-	g.m.settings['filename']=filename
-	t = time.time()
-	mat = bin2mat(filename)
-	g.m.statusBar().showMessage('{} successfully loaded ({} s)'.format(os.path.basename(filename), time.time()-t))
-	return mat
