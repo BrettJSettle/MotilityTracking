@@ -107,8 +107,8 @@ def import_mat(mat):
 	g.mat = mat
 	main, reject, r = create_main_data_struct(mat, g.m.MLDMinimumSpin.value(), g.m.MLDMaximumSpin.value())
 	g.m.trackPlot.waitForUpdate = True
-	g.m.minLengthSpin.setValue(0)
-	g.m.maxLengthSpin.setValue(max([tr['fr_length'] for tr in main]))
+	g.m.minLengthSpin.setValue(4)
+	g.m.maxLengthSpin.setValue(20)
 	g.m.MLDMinimumSpin.setValue(0)
 	g.m.MLDMaximumSpin.setValue(round(max([tr['mean_dis_pixel_lag'] for tr in main])))
 	g.m.neighborDistanceSpin.setValue(round(max([max(track['dis_pixel_lag']) for track in main])))
@@ -158,7 +158,7 @@ def initializeMainGui():
 	g.m.actionImportCoordinates.triggered.connect(lambda : open_file_gui(import_coords, prompt='Import coordinates from txt file', filetypes='*.txt'))
 	g.m.actionSimulateDistances.triggered.connect(lambda : open_file_gui(simulate_distances, prompt = 'Save simulated distances', filetypes='*.txt'))
 	g.m.actionExportMSD.triggered.connect(lambda : save_file_gui(exportMSD, prompt='Export Mean Squared Displacement Values', filetypes='*.txt'))
-	g.m.actionExportHistogram.triggered.connect(g.m.histogram.export)
+	g.m.actionExportHistogram.triggered.connect(lambda : save_file_gui(g.m.histogram.export, prompt='Export Histogram Values', filetypes='*.txt'))
 	g.m.actionExportOutlined.triggered.connect(lambda : g.m.trackPlot.export(filtered=True))
 	g.m.actionExportDistances.triggered.connect(lambda : save_file_gui(export_real_distances,  prompt='Export Distances', filetypes='*.txt'))
 
