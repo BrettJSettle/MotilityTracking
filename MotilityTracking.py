@@ -156,7 +156,7 @@ def initializeMainGui():
 	g.m.actionImportBin.triggered.connect(lambda : open_file_gui(lambda f: import_mat(open_bin(f)),  prompt='Import .bin file of tracks', filetypes='*.bin'))
 	g.m.actionImportBackground.triggered.connect(lambda : open_file_gui(set_background_image,  prompt='Select tif file as background image', filetypes='*.tif *.tiff *.stk'))
 	g.m.actionImportCoordinates.triggered.connect(lambda : open_file_gui(import_coords, prompt='Import coordinates from txt file', filetypes='*.txt'))
-	g.m.actionSimulateDistances.triggered.connect(lambda : open_file_gui(simulate_distances, prompt = 'Save simulated distances', filetypes='*.txt'))
+	g.m.actionSimulateDistances.triggered.connect(lambda : save_file_gui(simulate_distances, prompt = 'Save simulated distances', filetypes='*.txt'))
 	g.m.actionExportMSD.triggered.connect(lambda : save_file_gui(exportMSD, prompt='Export Mean Squared Displacement Values', filetypes='*.txt'))
 	g.m.actionExportHistogram.triggered.connect(lambda : save_file_gui(g.m.histogram.export, prompt='Export Histogram Values', filetypes='*.txt'))
 	g.m.actionExportTrackLengths.triggered.connect(lambda : save_file_gui(export_track_lengths, prompt='Export Track Lengths', filetypes='*.txt'))
