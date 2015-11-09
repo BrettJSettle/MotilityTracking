@@ -174,8 +174,7 @@ def export_distances(filename, ptsA, ptsB):
 def export_track_lengths(filename):
 	t = time.time()
 	g.m.statusBar().showMessage('Exporting Track Lengths to {}'.format(os.path.basename(filename)))
-	d = g.m.trackPlot.filtered_tracks
-	data = np.array([tr['fr_length'] for tr in tracks])
+	data = np.array([tr['fr_length'] for tr in g.m.trackPlot.filtered_tracks])
 	np.savetxt(filename, data, header='X\tY\tError', comments='', delimiter='\t')
 	g.m.statusBar().showMessage('Track Lengths successfully exported ({} s)'.format(os.path.basename(filename), time.time()-t))
 
