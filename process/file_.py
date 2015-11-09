@@ -171,19 +171,19 @@ def export_distances(filename, ptsA, ptsB):
 				outf.write('%.3f\n' % np.linalg.norm(np.subtract(pt, rand_means[j])))
 	g.m.statusBar().showMessage('Successfully saved simulated distances in {}'.format(time.time() - t))
 
-def exportMSD(filename):
+def export_track_lengths(filename):
 	t = time.time()
 	g.m.statusBar().showMessage('Exporting Track Lengths to {}'.format(os.path.basename(filename)))
-	d = g.m.MSDWidget.plot_data
-	data = np.transpose([d['x'], d['y'], d['er']])
+	d = g.m.trackPlot.filtered_tracks
+	data = np.array([tr['fr_length'] for tr in tracks])
 	np.savetxt(filename, data, header='X\tY\tError', comments='', delimiter='\t')
 	g.m.statusBar().showMessage('Track Lengths successfully exported ({} s)'.format(os.path.basename(filename), time.time()-t))
 
-def export_track_lengths(filename):
+def exportMSD(filename):
 	t = time.time()
 	g.m.statusBar().showMessage('Exporting MSD to {}'.format(os.path.basename(filename)))
-	d = g.m.trackPlot.filtered_tracks
-	data = np.array([tr['fr_length'] for tr in tracks])
+	d = g.m.MSDWidget.plot_data
+	data = np.transpose([d['x'], d['y'], d['er']])
 	np.savetxt(filename, data, header='X\tY\tError', comments='', delimiter='\t')
 	g.m.statusBar().showMessage('MSD successfully exported ({} s)'.format(os.path.basename(filename), time.time()-t))
 
