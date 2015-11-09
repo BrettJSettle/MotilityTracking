@@ -118,7 +118,7 @@ def import_mat(mat):
 
 def track_in_roi(track):
 	for roi in g.m.currentWindow.rois:
-		if roi.contains(track):
+		if roi.contains(track['mean_x'], track['mean_y']):
 			return True
 	return False
 
@@ -159,6 +159,7 @@ def initializeMainGui():
 	g.m.actionSimulateDistances.triggered.connect(lambda : open_file_gui(simulate_distances, prompt = 'Save simulated distances', filetypes='*.txt'))
 	g.m.actionExportMSD.triggered.connect(lambda : save_file_gui(exportMSD, prompt='Export Mean Squared Displacement Values', filetypes='*.txt'))
 	g.m.actionExportHistogram.triggered.connect(lambda : save_file_gui(g.m.histogram.export, prompt='Export Histogram Values', filetypes='*.txt'))
+	g.m.actionExportTrackLengths.triggered.connect(lambda : save_file_gui(export_track_lengths, prompt='Export Track Lengths', filetypes='*.txt'))
 	g.m.actionExportOutlined.triggered.connect(lambda : g.m.trackPlot.export(filtered=True))
 	g.m.actionExportDistances.triggered.connect(lambda : save_file_gui(export_real_distances,  prompt='Export Distances', filetypes='*.txt'))
 

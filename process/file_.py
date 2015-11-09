@@ -23,7 +23,7 @@ import tifffile
 import json
 import re
 
-__all__ = ['open_file_gui','open_file','save_file_gui','save_file', 'close', 'simulate_distances', 'exportMSD', 'export_distances', 'import_coords']
+__all__ = ['open_file_gui','open_file','save_file_gui','save_file', 'close', 'simulate_distances', 'exportMSD', 'export_distances', 'import_coords', 'export_track_lengths']
 
 def open_file_gui(func, filetypes, prompt='Open File'):
 	filename=g.m.settings['filename']
@@ -171,11 +171,19 @@ def export_distances(filename, ptsA, ptsB):
 				outf.write('%.3f\n' % np.linalg.norm(np.subtract(pt, rand_means[j])))
 	g.m.statusBar().showMessage('Successfully saved simulated distances in {}'.format(time.time() - t))
 
+def export_track_lengths(filename):
+	t = time.time()
+	g.m.statusBar().showMessage('Exporting Track Lengths to {}'.format(os.path.basename(filename)))
+	d = g.m.MSDWidget.plot_data
+	data = np.transpose([d['x'], d['y'], d['er']])
+	np.savetxt(filename, data, header='X\tY\tError', comments='', delimiter='\t')
+	g.m.statusBar().showMessage('MSD successfully exported ({} s)'.format(os.path.basename(filename), time.time()-t))
+
 def exportMSD(filename):
 	t = time.time()
 	g.m.statusBar().showMessage('Exporting MSD to {}'.format(os.path.basename(filename)))
-	d = g.m.MSDPlot.plot_data
-	data = np.transpose([d['x'], d['y'], d['er']])
+	d = g.m.trackPlot.filtered_tracks
+	data = np.array([tr['fr_length'] for tr in tracks])
 	np.savetxt(filename, data, header='X\tY\tError', comments='', delimiter='\t')
 	g.m.statusBar().showMessage('MSD successfully exported ({} s)'.format(os.path.basename(filename), time.time()-t))
 

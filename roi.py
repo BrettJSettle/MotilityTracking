@@ -52,8 +52,6 @@ class ROI(QWidget):
         return False
 
     def delete(self):
-        for roi in self.linkedROIs:
-            roi.linkedROIs.remove(self)
         if self in self.window.rois:
             self.window.rois.remove(self)
         self.window.currentROI=None
@@ -139,15 +137,8 @@ class ROI(QWidget):
     def translate(self,difference,startpt):
         self.path.translate(difference)
         self.pathitem.setPath(self.path)
-        for roi in self.linkedROIs:
-            roi.draw_from_points(self.getPoints())
-            roi.translated.emit()
         self.translated.emit()
     def finish_translate(self):
-        for roi in self.linkedROIs:
-            roi.draw_from_points(self.getPoints())
-            roi.translate_done.emit()
-            roi.beingDragged=False
         self.draw_from_points(self.getPoints())
         self.getMask()
         self.translate_done.emit()

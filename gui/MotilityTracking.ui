@@ -146,6 +146,7 @@
     <addaction name="actionExportHistogram"/>
     <addaction name="actionExportOutlined"/>
     <addaction name="actionExportDistances"/>
+    <addaction name="actionExportTrackLengths"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuSimulate"/>
@@ -190,6 +191,11 @@
   <action name="actionExportDistances">
    <property name="text">
     <string>Export All Distances</string>
+   </property>
+  </action>
+  <action name="actionExportTrackLengths">
+   <property name="text">
+    <string>Export Track Lengths</string>
    </property>
   </action>
  </widget>
