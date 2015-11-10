@@ -33,6 +33,7 @@ def open_file_gui(func, filetypes, prompt='Open File'):
 		filename= QFileDialog.getOpenFileName(g.m, prompt, '', filetypes)
 	filename=str(filename)
 	if filename != '':
+		g.m.settings['filename'] = filename
 		func(filename)
 	else:
 		g.m.statusBar().showMessage('No File Selected')
@@ -175,7 +176,7 @@ def export_track_lengths(filename):
 	t = time.time()
 	g.m.statusBar().showMessage('Exporting Track Lengths to {}'.format(os.path.basename(filename)))
 	data = np.array([tr['fr_length'] for tr in g.m.trackPlot.filtered_tracks])
-	np.savetxt(filename, data, header='X\tY\tError', comments='', delimiter='\t')
+	np.savetxt(filename, data, header='Frame Length', comments='', delimiter='\t')
 	g.m.statusBar().showMessage('Track Lengths successfully exported ({} s)'.format(os.path.basename(filename), time.time()-t))
 
 def exportMSD(filename):
