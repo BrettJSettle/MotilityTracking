@@ -95,7 +95,8 @@ def fit_cdf(x,y):
             ans = minimize(resid, cdf, args=(y, x))
         except:
             pass
-        yield cdf, ans, fun(cdf, x)
+        print(cdf)
+        yield cdf, ans, [i + y for y in fun(cdf, x)]
 
 class CDF():
     def __init__(self):
@@ -169,7 +170,6 @@ class CDFWidget(QtGui.QWidget):
         data = []
         columns = ('Diff Coeff 1', 'Diff Coeff 2', 'Diff Coeff 3', 'Weight 1', 'Weight 2', 'Weight 3')
         for i in range(1, 4):
-            print(i, cdf[i, 'yfit'])
             self.plt.addItem(pg.PlotDataItem(x=xs, y=cdf[i, 'yfit'], pen=(255 if i == 3 else 0, 255 if i == 2 else 0, 255 if i == 1 else 0), name = "Exp %s" % i))
             app = [cdf[i, a] for a in columns]
             data.append(tuple(app))
@@ -181,3 +181,18 @@ class CDFWidget(QtGui.QWidget):
 
         data = np.array(data, dtype=[(a, float) for a in columns])
         self.tab.setData(data)
+
+if __name__ == "__main__":
+    
+    ys = np.random.random(1000)
+    xs = range(len(ys))
+    x = np.array(xs)
+    y = np.array(ys)
+    from PyQt4 import QtGui
+    app = QtGui.QApplication([])
+    pw = pg.PlotWidget()
+    pw.show()
+    pw.getViewBox().setAspectLocked(True)
+    for i in fit_cdf(x, y):
+        pw.addItem(pg.PlotDataItem(i[2]))
+    app.exec_()

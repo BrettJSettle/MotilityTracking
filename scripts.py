@@ -48,7 +48,7 @@ def newScript():
         f=open(filename,'w')
         d=datetime.datetime.now().isoformat().strip().split('T')[0].replace('-','.')
         author=os.path.basename(expanduser("~"))
-        f.write('''"""\nCreated {}\n\n@author:{}\n"""\nopen_file(g.m.settings['filename'])'''.format(d,author))
+        f.write('''"""\nCreated {}\n\n@author:{}\n"""\nopen_file(g.m.filename)'''.format(d,author))
         f.close()        
         
 def executeScript(scriptfile):

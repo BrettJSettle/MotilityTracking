@@ -23,24 +23,27 @@ import tifffile
 import json
 import re
 
-__all__ = ['open_file_gui','open_file','save_file_gui','save_file', 'close', 'simulate_distances', 'exportMSD', 'export_distances', 'import_coords', 'export_track_lengths']
+__all__ = ['open_file_gui','open_file','save_file_gui', 'close', 'simulate_distances', 'exportMSD', 'export_distances', 'import_coords', 'export_track_lengths']
 
 def open_file_gui(func, filetypes, prompt='Open File'):
-	filename=g.m.settings['filename']
+	filename=g.m.filename
 	if filename is not None and os.path.isfile(filename):
 		filename= QFileDialog.getOpenFileName(g.m, prompt, filename, filetypes)
 	else:
 		filename= QFileDialog.getOpenFileName(g.m, prompt, '', filetypes)
 	filename=str(filename)
 	if filename != '':
-		g.m.settings['filename'] = filename
+		g.m.filename = filename
 		func(filename)
 	else:
 		g.m.statusBar().showMessage('No File Selected')
 
 def save_file_gui(func, filetypes, prompt = 'Save File'):
-	filename=g.m.settings['filename']
-	directory=os.path.dirname(filename)
+	filename=g.m.filename
+	try:
+		directory=os.path.dirname(filename)
+	except:
+		directory = ''
 	if filename is not None and directory != '':
 		filename= QFileDialog.getSaveFileName(g.m, prompt, directory, filetypes)
 	else:
@@ -48,6 +51,7 @@ def save_file_gui(func, filetypes, prompt = 'Save File'):
 	filename=str(filename)
 	if filename != '':
 		func(filename)
+		g.m.filename = filename
 	else:
 		g.m.statusBar().showMessage('Save Cancelled')
 			
@@ -77,7 +81,7 @@ def open_file(filename):
 	elif len(tif.shape)==2: # I haven't tested whether this preserved the x y and keeps it the same as in FIJI.  TEST THIS!!
 		tif=np.transpose(tif,(1,0))
 	g.m.statusBar().showMessage('{} successfully loaded ({} s)'.format(os.path.basename(filename), time.time()-t))
-	g.m.settings['filename']=filename
+	g.m.filename=filename
 	return tif
 
 def set_background_image(filename):
@@ -86,20 +90,7 @@ def set_background_image(filename):
 		tif = np.average(tif, 0)
 	g.m.trackView.imageview.setImage(tif)
 		
-def save_file(filename):
-	if os.path.dirname(filename)=='': #if the user didn't specify a directory
-		directory=os.path.normpath(os.path.dirname(g.m.settings['filename']))
-		filename=os.path.join(directory,filename)
-	g.m.statusBar().showMessage('Saving {}'.format(os.path.basename(filename)))
-	tif=g.m.currentWindow.image.astype(g.m.settings['data_type'])
-	metadata=json.dumps(g.m.currentWindow.metadata)
-	if len(tif.shape)==3:
-		tif=np.transpose(tif,(0,2,1)) # This keeps the x and the y the same as in FIJI
-	elif len(tif.shape)==2:
-		tif=np.transpose(tif,(1,0))
-	tifffile.imsave(filename, tif, description=metadata) #http://stackoverflow.com/questions/20529187/what-is-the-best-way-to-save-image-metadata-alongside-a-tif-with-python
-	g.m.statusBar().showMessage('Successfully saved {}'.format(os.path.basename(filename)))
-	
+
 def txt2dict(metadata):
 	meta=dict()
 	try:

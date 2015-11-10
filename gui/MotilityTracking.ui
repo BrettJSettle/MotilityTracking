@@ -66,7 +66,7 @@
         <widget class="SpinBox" name="minLengthSpin">
          <property name="geometry">
           <rect>
-           <x>100</x>
+           <x>91</x>
            <y>36</y>
            <width>42</width>
            <height>22</height>
@@ -86,16 +86,34 @@
         <widget class="QLabel" name="label_2">
          <property name="geometry">
           <rect>
-           <x>150</x>
-           <y>40</y>
-           <width>91</width>
+           <x>206</x>
+           <y>38</y>
+           <width>41</width>
+           <height>20</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>frames</string>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_7">
+         <property name="geometry">
+          <rect>
+           <x>139</x>
+           <y>38</y>
+           <width>16</width>
            <height>16</height>
           </rect>
          </property>
          <property name="text">
-          <string>-                 frames</string>
+          <string>to</string>
          </property>
         </widget>
+        <zorder>label_2</zorder>
+        <zorder>label</zorder>
+        <zorder>minLengthSpin</zorder>
+        <zorder>maxLengthSpin</zorder>
+        <zorder>label_7</zorder>
        </widget>
       </item>
       <item>
@@ -109,7 +127,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QGroupBox" name="MSDLGroupBox">
+       <widget class="QGroupBox" name="MSLDGroupBox">
         <property name="minimumSize">
          <size>
           <width>0</width>
@@ -171,6 +189,11 @@
           <string>min                   max</string>
          </property>
         </widget>
+        <zorder>label_3</zorder>
+        <zorder>MSLDMinSpin</zorder>
+        <zorder>MSLDMaxSpin</zorder>
+        <zorder>label_4</zorder>
+        <zorder>groupBox_2</zorder>
        </widget>
       </item>
       <item>
@@ -204,7 +227,7 @@
           </rect>
          </property>
          <property name="text">
-          <string>Only Show Molecules with                  neighbors</string>
+          <string>   Consider Molecules with                  neighbors</string>
          </property>
         </widget>
         <widget class="SpinBox" name="neighborsSpin">
@@ -334,6 +357,28 @@
         <string>Plot Mean Track XY</string>
        </property>
       </widget>
+      <widget class="QCheckBox" name="autoFocusCheck">
+       <property name="geometry">
+        <rect>
+         <x>580</x>
+         <y>10</y>
+         <width>136</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>140</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Auto-focus</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
      </widget>
     </item>
    </layout>
@@ -344,7 +389,7 @@
      <x>0</x>
      <y>0</y>
      <width>886</width>
-     <height>38</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

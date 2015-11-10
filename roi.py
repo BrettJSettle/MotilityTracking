@@ -116,13 +116,14 @@ class ROI(QWidget):
         f.close()
 
     def save_gui(self):
-        filename=g.m.settings['filename']
+        filename=g.m.filename
         if filename is not None and os.path.isfile(filename):
             filename= QFileDialog.getOpenFileName(g.m, 'Save ROI', filename, "*.txt")
         else:
             filename= QFileDialog.getOpenFileName(g.m, 'Save ROI', '', '*.txt')
         filename=str(filename)
         if filename != '':
+            g.m.filename = filename
             self.save(filename)
         else:
             g.m.statusBar().showMessage('No File Selected')

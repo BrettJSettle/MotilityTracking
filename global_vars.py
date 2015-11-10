@@ -33,47 +33,11 @@ class SetCurrentWindowSignal(QWidget):
 		QWidget.__init__(self,parent)
 		self.hide()
 
-class Settings:
-	def __init__(self, name):
-		self.config_file=os.path.join(expanduser("~"),'.Configs','%s.p' % name)
-		try:
-			self.d=pickle.load(open(self.config_file, "rb" ))
-		except (IOError, ValueError):
-			self.d=dict()
-			self.d['filename']='' #this is the name of the most recently opened file
-			self.d['data_type']=np.float64 #this is the data type used to save an image.  All image data are handled internally as np.float64 irrespective of this setting
-			self.d['internal_data_type']=np.float64
-		self.d['mousemode']='rectangle'
-		self.d['multipleTraceWindows'] = False
-			
-	def __getitem__(self, item):
-		try:
-			self.d[item]
-		except KeyError:
-			if item=='internal_data_type':
-				self.d[item]=np.float64
-		return self.d[item]
-	def __setitem__(self,key,item):
-		self.d[key]=item
-		self.save()
-	def save(self):
-		'''save to a config file.'''
-		if not os.path.exists(os.path.dirname(self.config_file)):
-			os.makedirs(os.path.dirname(self.config_file))
-		pickle.dump(self.d, open( self.config_file, "wb" ))
-	def setmousemode(self,mode):
-		self.d['mousemode']=mode
-	def setMultipleTraceWindows(self, f):
-		self.d['multipleTraceWindows'] = f
-	def setInternalDataType(self, dtype):
-		self.d['internal_data_type'] = dtype
-		print('Changed data_type to {}'.format(data_type))
-
-def init(filename, title='Flika'):
+def init(filename):
 	global m
 	m=uic.loadUi(filename)
 	m.windowSelectedSignal=SetCurrentWindowSignal(m)
-	m.settings = Settings("title")
+	m.filename = ''
 	
 	m.windows = []
 	m.traceWindows = []
@@ -83,4 +47,4 @@ def init(filename, title='Flika'):
 	m.clipboard = None
 	m.scriptEditor = None
 	m.setAcceptDrops(True)
-	m.closeEvent = mainguiClose
+	m.onClose = mainguiClose

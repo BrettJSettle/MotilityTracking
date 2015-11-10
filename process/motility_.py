@@ -19,7 +19,7 @@ from collections import defaultdict
 
 def open_bin(filename):
 	g.m.statusBar().showMessage('Loading {}'.format(os.path.basename(filename)))
-	g.m.settings['filename']=filename
+	g.m.filename=filename
 	t = time.time()
 	mat = bin2mat(filename)
 	g.m.statusBar().showMessage('{} successfully loaded ({} s)'.format(os.path.basename(filename), time.time()-t))

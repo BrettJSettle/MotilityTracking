@@ -176,13 +176,7 @@ class Window(QWidget):
                     self.x=None
                     self.y=None
                 else:
-                    mm=g.m.settings['mousemode']
-                    if mm=='point':
-                        t=self.currentIndex
-                        position=[self.x,self.y]
-                        self.scatterPoints[t].append(position)
-                        self.scatterPlot.addPoints(pos=[[self.x,self.y]], brush=pg.mkBrush('r'))
-                    elif g.m.clipboard is not None:
+                    if g.m.clipboard is not None:
                         self.menu = QMenu(self)
                         self.menu.addAction(self.pasteAct)
                         self.menu.exec_(ev.screenPos().toQPoint())
@@ -223,44 +217,37 @@ class Window(QWidget):
             self.imageview.view.translateBy(difference)
         if ev.button() == Qt.RightButton:
             ev.accept()
-            mm=g.m.settings['mousemode']
-            if mm=='freehand' or mm=='line' or mm=='rectangle':
-                if ev.isStart():
-                    self.ev=ev
-                    pt=self.imageview.getImageItem().mapFromScene(ev.buttonDownScenePos())
-                    self.x=pt.x() # this sets x and y to the button down position, not the current position
-                    self.y=pt.y()
-                    #print("Drag start x={},y={}".format(self.x,self.y))
-                    for roi in self.rois:
-                        roi.mouseOver(self.x,self.y)
-                    if any([r.mouseIsOver for r in self.rois]): #if any roi is moused over
-                        self.currentROIs=[r for r in self.rois if r.mouseIsOver]
-                        self.creatingROI=False
-                    else:
-                        self.creatingROI=True
-                        if g.m.settings['mousemode']=='freehand':
-                            self.currentROI=ROI(self,self.x,self.y)
-                        if g.m.settings['mousemode']=='line':
-                            self.currentROI=ROI_line(self,self.x,self.y)
-                        if g.m.settings['mousemode']=='rectangle':
-                            self.currentROI=ROI_rectangle(self,self.x,self.y)
-                if ev.isFinish():
-                    if self.creatingROI:
-                        self.currentROI.drawFinished()
-                        self.creatingROI=False
-                    else: 
-                        for r in self.currentROIs:
-                            r.finish_translate()
-                else: # if we are in the middle of the drag between starting and finishing
-                    #if inImage:
-                    if self.creatingROI:
-                        self.currentROI.extend(self.x,self.y)
-                    else:
-                        difference=self.imageview.getImageItem().mapFromScene(ev.scenePos())-self.imageview.getImageItem().mapFromScene(ev.lastScenePos())
-                        if difference.isNull():
-                            return
-                        for r in self.currentROIs:
-                            r.translate(difference,self.imageview.getImageItem().mapFromScene(ev.lastScenePos()))
+            if ev.isStart():
+                self.ev=ev
+                pt=self.imageview.getImageItem().mapFromScene(ev.buttonDownScenePos())
+                self.x=pt.x() # this sets x and y to the button down position, not the current position
+                self.y=pt.y()
+                #print("Drag start x={},y={}".format(self.x,self.y))
+                for roi in self.rois:
+                    roi.mouseOver(self.x,self.y)
+                if any([r.mouseIsOver for r in self.rois]): #if any roi is moused over
+                    self.currentROIs=[r for r in self.rois if r.mouseIsOver]
+                    self.creatingROI=False
+                else:
+                    self.creatingROI=True
+                    self.currentROI=ROI(self,self.x,self.y)
+            if ev.isFinish():
+                if self.creatingROI:
+                    self.currentROI.drawFinished()
+                    self.creatingROI=False
+                else: 
+                    for r in self.currentROIs:
+                        r.finish_translate()
+            else: # if we are in the middle of the drag between starting and finishing
+                #if inImage:
+                if self.creatingROI:
+                    self.currentROI.extend(self.x,self.y)
+                else:
+                    difference=self.imageview.getImageItem().mapFromScene(ev.scenePos())-self.imageview.getImageItem().mapFromScene(ev.lastScenePos())
+                    if difference.isNull():
+                        return
+                    for r in self.currentROIs:
+                        r.translate(difference,self.imageview.getImageItem().mapFromScene(ev.lastScenePos()))
 
     def updateTimeStampLabel(self,frame):
         if self.framerate==0:

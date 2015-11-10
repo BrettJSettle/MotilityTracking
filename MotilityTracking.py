@@ -53,16 +53,18 @@ class TrackPlot(pg.PlotDataItem):
 		self.filter()
 
 	def filter(self):
-		if self.waitForUpdate:
+		if self.waitForUpdate or len(self.all_tracks) == 0:
 			return
-		self.filtered_tracks = self.all_tracks[:]
-		if g.m.additionalGroupBox.isChecked():
-			filter_ids =  get_clusters()
-			self.filtered_tracks = [self.filtered_tracks[i] for i, cluster in enumerate(filter_ids) if cluster > 0]
-
+		self.filtered_tracks = []
 		for tr in self.all_tracks:
 			if isValidTrack(tr):
 				self.filtered_tracks.append(tr)
+
+		if g.m.additionalGroupBox.isChecked() and g.m.neighborsSpin.value() > 0:
+			filter_ids = get_clusters(self.filtered_tracks)
+			print([i for i in filter_ids])
+			self.filtered_tracks = [self.filtered_tracks[i] for i, cluster in enumerate(filter_ids) if cluster >= 0]
+
 		self._replot()
 		self.tracksChanged.emit()
 
@@ -78,7 +80,8 @@ class TrackPlot(pg.PlotDataItem):
 			mean_x.append(tr['mean_x'])
 			mean_y.append(tr['mean_y'])
 			connect_list.extend([1] * (len(tr['x_cor']) - 1) + [0])
-		g.m.trackView.imageview.view.setRange(xRange=(min(tracks_x), max(tracks_x)), yRange=(min(tracks_y), max(tracks_y)))
+		if g.m.autoFocusCheck.isChecked() and len(tracks_x) > 0 and len(tracks_y) > 0:
+			g.m.trackView.imageview.view.setRange(xRange=(min(tracks_x), max(tracks_x)), yRange=(min(tracks_y), max(tracks_y)))
 		self.tracks.setData(x=tracks_x, y=tracks_y, connect=np.array(connect_list))
 		self.means.setData(x=mean_x, y=mean_y, symbol='x', brush=(255, 0, 0), pen=(255, 0, 0))
 	
@@ -95,10 +98,11 @@ class TrackPlot(pg.PlotDataItem):
 
 
 def isValidTrack(track):
-	if g.m.MSLDMinSpin.value() <= track['mean_dis_pixel_lag'] <= g.m.MSLDMaxSpin.value():
-		if not g.m.MSLDGroupBox.isChecked() or g.m.minLengthSpin.value() <= track['fr_length'] <= g.m.maxLengthSpin.value():
+	if not g.m.MSLDGroupBox.isChecked() or g.m.MSLDMinSpin.value() <= track['mean_dis_pixel_lag'] <= g.m.MSLDMaxSpin.value():
+		if g.m.minLengthSpin.value() <= track['fr_length'] <= g.m.maxLengthSpin.value():
 			if not g.m.ignoreOutsideCheck.isChecked() or track_in_roi(track):
 				return True
+	return False
 
 def export_real_distances(filename):
 	coords = g.m.trackView.imported.getData()
@@ -109,24 +113,24 @@ def import_mat(mat):
 	if len(mat) == 0:
 		return
 	g.mat = mat
-	main, reject, r = create_main_data_struct(mat, g.m.MLDMinimumSpin.value(), g.m.MLDMaximumSpin.value())
+	main, reject, r = create_main_data_struct(mat, g.m.MSLDMinSpin.value(), g.m.MSLDMaxSpin.value())
 	g.m.trackPlot.waitForUpdate = True
 	g.m.minLengthSpin.setValue(4)
 	g.m.maxLengthSpin.setValue(20)
-	g.m.MLDMinimumSpin.setValue(0)
-	g.m.MLDMaximumSpin.setValue(round(max([tr['mean_dis_pixel_lag'] for tr in main])))
+	g.m.MSLDMinSpin.setValue(0)
+	g.m.MSLDMaxSpin.setValue(round(max([tr['mean_dis_pixel_lag'] for tr in main])))
 	g.m.neighborDistanceSpin.setValue(round(max([max(track['dis_pixel_lag']) for track in main])))
 	g.m.trackPlot.waitForUpdate = False
 
 	g.m.trackPlot.setTracks(main)
 
-def get_clusters():
+def get_clusters(tracks):
 	neighbors = g.m.neighborsSpin.value()
 	dist = g.m.neighborDistanceSpin.value()
-	data = np.array([[tr['mean_x'], tr['mean_y']] for tr in g.m.trackPlot.filtered_tracks])
-	scanner = DBSCAN(dist, neighbors)
+	data = np.array([[tr['mean_x'], tr['mean_y']] for tr in tracks])
+	scanner = DBSCAN(eps=dist, min_samples=neighbors)
 	ids = scanner.fit_predict(data)
-	return labels
+	return ids
 
 def track_in_roi(track):
 	for roi in g.m.currentWindow.rois:
@@ -157,8 +161,6 @@ def update_plots():
 
 def initializeMainGui():
 	g.init('gui/MotilityTracking.ui')
-	g.m.settings['mousemode'] = 'freehand'
-	g.widgetCreated = lambda : None
 	g.m.trackView = Window(np.zeros((3, 3, 3)))
 	g.m.histogram = Histogram(title='Mean Single Lag Distance Histogram', labels={'left': 'Count', 'bottom': 'Mean SLD Per Track (Pixels)'})
 	g.m.trackPlot = TrackPlot()
@@ -174,28 +176,26 @@ def initializeMainGui():
 	g.m.actionExportTrackLengths.triggered.connect(lambda : save_file_gui(export_track_lengths, prompt='Export Track Lengths', filetypes='*.txt'))
 	g.m.actionExportOutlined.triggered.connect(lambda : g.m.trackPlot.export(filtered=True))
 	g.m.actionExportDistances.triggered.connect(lambda : save_file_gui(export_real_distances,  prompt='Export Distances', filetypes='*.txt'))
-
 	
 	g.m.MSLDMinSpin.setOpts(value=0, decimals=2, maximum=1000)
-	
-	g.m.MSLDMaxSpin.setOpts(value=1000, decimals=2, maximum=1000)
-	
-	g.m.neighborDistanceSpin.setOpts(value=100, decimals=2, maximum=100)
-	
-	g.m.minLengthSpin.setOpts(value=0, maximum=1000, int=True)
-	
-	g.m.maxLengthSpin.setOpts(value=100, maximum=1000, int=True)
-	
+	g.m.MSLDMaxSpin.setOpts(value=100, decimals=2, maximum=1000)
+	g.m.neighborsSpin.setOpts(value=0, maximum=100, int=True, step=1)
+	g.m.neighborDistanceSpin.setOpts(value=1, decimals=2, maximum=100)
+	g.m.minLengthSpin.setOpts(value=4, maximum=1000, int=True, step=1)
+	g.m.maxLengthSpin.setOpts(value=20, maximum=1000, int=True, step=1)
+
+	g.m.MSLDGroupBox.toggled.connect(g.m.trackPlot.filter)
+	g.m.additionalGroupBox.toggled.connect(g.m.trackPlot.filter)
 	g.m.MSLDMaxSpin.sigValueChanged.connect(g.m.trackPlot.filter)
 	g.m.MSLDMinSpin.sigValueChanged.connect(g.m.trackPlot.filter)
 	g.m.neighborDistanceSpin.sigValueChanged.connect(g.m.trackPlot.filter)
+	g.m.neighborsSpin.sigValueChanged.connect(g.m.trackPlot.filter)
 	g.m.minLengthSpin.sigValueChanged.connect(g.m.trackPlot.filter)
 	g.m.maxLengthSpin.sigValueChanged.connect(g.m.trackPlot.filter)
 	g.m.hideBackgroundCheck.toggled.connect(lambda v: g.m.trackView.imageview.getImageItem().setVisible(not v))
 	g.m.ignoreOutsideCheck.toggled.connect(g.m.trackPlot.filter)
 	g.m.plotMeansCheck.toggled.connect(g.m.trackPlot.means.setVisible)
 	g.m.plotTracksCheck.toggled.connect(g.m.trackPlot.tracks.setVisible)
-	
 
 	g.m.viewTab.layout().insertWidget(0, g.m.trackView)
 
@@ -207,7 +207,6 @@ def initializeMainGui():
 	g.m.CDFWidget = CDFWidget()#pg.PlotWidget(title = 'Cumulative Distribution Function', labels={'left': 'Cumulative Probability', 'bottom': 'Single Lag Displacement Squared'})
 	#g.m.CDFPlot = pg.PlotCurveItem()
 	g.m.cdfTab.layout().addWidget(g.m.CDFWidget)
-
 
 	g.m.installEventFilter(mainWindowEventEater)
 	g.m.setWindowTitle('Motility Tracking')
