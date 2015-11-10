@@ -14,8 +14,8 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
+   <layout class="QVBoxLayout" name="verticalLayout_3">
+    <item>
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
        <number>0</number>
@@ -40,12 +40,201 @@
       </widget>
      </widget>
     </item>
-    <item row="1" column="0">
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QGroupBox" name="groupBox_2">
+        <property name="title">
+         <string>Step 1: Track Lengths</string>
+        </property>
+        <widget class="QLabel" name="label">
+         <property name="geometry">
+          <rect>
+           <x>20</x>
+           <y>16</y>
+           <width>241</width>
+           <height>21</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Only consider molecules with tracks lengths of</string>
+         </property>
+        </widget>
+        <widget class="SpinBox" name="minLengthSpin">
+         <property name="geometry">
+          <rect>
+           <x>100</x>
+           <y>36</y>
+           <width>42</width>
+           <height>22</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="SpinBox" name="maxLengthSpin">
+         <property name="geometry">
+          <rect>
+           <x>160</x>
+           <y>36</y>
+           <width>42</width>
+           <height>22</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_2">
+         <property name="geometry">
+          <rect>
+           <x>150</x>
+           <y>40</y>
+           <width>91</width>
+           <height>16</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>-                 frames</string>
+         </property>
+        </widget>
+       </widget>
+      </item>
+      <item>
+       <widget class="Line" name="line">
+        <property name="frameShadow">
+         <enum>QFrame::Plain</enum>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="groupBox_3">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>80</height>
+         </size>
+        </property>
+        <property name="title">
+         <string>Step 2: Sort Molecules by Mean SLD</string>
+        </property>
+        <widget class="QLabel" name="label_3">
+         <property name="geometry">
+          <rect>
+           <x>20</x>
+           <y>20</y>
+           <width>121</width>
+           <height>16</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Mean SLD Range in Pixels</string>
+         </property>
+        </widget>
+        <widget class="SpinBox" name="MSLDMinSpin">
+         <property name="geometry">
+          <rect>
+           <x>150</x>
+           <y>20</y>
+           <width>51</width>
+           <height>22</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="SpinBox" name="MSLDMaxSpin">
+         <property name="geometry">
+          <rect>
+           <x>220</x>
+           <y>20</y>
+           <width>51</width>
+           <height>22</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_4">
+         <property name="geometry">
+          <rect>
+           <x>160</x>
+           <y>40</y>
+           <width>101</width>
+           <height>16</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>min                   max</string>
+         </property>
+        </widget>
+       </widget>
+      </item>
+      <item>
+       <widget class="Line" name="line_2">
+        <property name="frameShadow">
+         <enum>QFrame::Plain</enum>
+        </property>
+        <property name="orientation">
+         <enum>Qt::Vertical</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QGroupBox" name="groupBox_4">
+        <property name="title">
+         <string>Additional Filters</string>
+        </property>
+        <widget class="QLabel" name="label_5">
+         <property name="geometry">
+          <rect>
+           <x>10</x>
+           <y>20</y>
+           <width>241</width>
+           <height>16</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>Only Show Molecules with                  neighbors</string>
+         </property>
+        </widget>
+        <widget class="SpinBox" name="neighborsSpin">
+         <property name="geometry">
+          <rect>
+           <x>140</x>
+           <y>16</y>
+           <width>42</width>
+           <height>22</height>
+          </rect>
+         </property>
+        </widget>
+        <widget class="QLabel" name="label_6">
+         <property name="geometry">
+          <rect>
+           <x>70</x>
+           <y>40</y>
+           <width>121</width>
+           <height>16</height>
+          </rect>
+         </property>
+         <property name="text">
+          <string>within                    pixels</string>
+         </property>
+        </widget>
+        <widget class="SpinBox" name="neighborDistanceSpin">
+         <property name="geometry">
+          <rect>
+           <x>100</x>
+           <y>40</y>
+           <width>51</width>
+           <height>22</height>
+          </rect>
+         </property>
+        </widget>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
      <widget class="QGroupBox" name="groupBox">
       <property name="minimumSize">
        <size>
         <width>0</width>
-        <height>120</height>
+        <height>40</height>
        </size>
       </property>
       <property name="maximumSize">
@@ -55,62 +244,81 @@
        </size>
       </property>
       <property name="title">
-       <string>Filter Tracks</string>
+       <string>View Options</string>
       </property>
-      <layout class="QGridLayout" name="gridLayout_3">
-       <item row="0" column="0">
-        <widget class="QCheckBox" name="plotTracksCheck">
-         <property name="maximumSize">
-          <size>
-           <width>120</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Plot Tracks</string>
-         </property>
-         <property name="checked">
-          <bool>true</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="2">
-        <widget class="QCheckBox" name="hideBackgroundCheck">
-         <property name="maximumSize">
-          <size>
-           <width>140</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Hide Background Image</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1" rowspan="2">
-        <layout class="QGridLayout" name="filterLayout"/>
-       </item>
-       <item row="1" column="2">
-        <widget class="QCheckBox" name="ignoreOutsideCheck">
-         <property name="text">
-          <string>Ignore Tracks Outside ROIs</string>
-         </property>
-        </widget>
-       </item>
-       <item row="1" column="0">
-        <widget class="QCheckBox" name="plotMeansCheck">
-         <property name="maximumSize">
-          <size>
-           <width>120</width>
-           <height>16777215</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>Plot Mean Track XY</string>
-         </property>
-        </widget>
-       </item>
-      </layout>
+      <widget class="QCheckBox" name="plotTracksCheck">
+       <property name="geometry">
+        <rect>
+         <x>80</x>
+         <y>10</y>
+         <width>75</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>120</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Plot Tracks</string>
+       </property>
+       <property name="checked">
+        <bool>true</bool>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="hideBackgroundCheck">
+       <property name="geometry">
+        <rect>
+         <x>440</x>
+         <y>10</y>
+         <width>136</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>140</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Hide Background Image</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="ignoreOutsideCheck">
+       <property name="geometry">
+        <rect>
+         <x>280</x>
+         <y>10</y>
+         <width>156</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Ignore Tracks Outside ROIs</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="plotMeansCheck">
+       <property name="geometry">
+        <rect>
+         <x>160</x>
+         <y>10</y>
+         <width>114</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>120</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text">
+        <string>Plot Mean Track XY</string>
+       </property>
+      </widget>
      </widget>
     </item>
    </layout>
@@ -199,6 +407,13 @@
    </property>
   </action>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>SpinBox</class>
+   <extends>QSpinBox</extends>
+   <header>pyqtgraph</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>

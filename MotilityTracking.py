@@ -163,24 +163,19 @@ def initializeMainGui():
 	g.m.actionExportOutlined.triggered.connect(lambda : g.m.trackPlot.export(filtered=True))
 	g.m.actionExportDistances.triggered.connect(lambda : save_file_gui(export_real_distances,  prompt='Export Distances', filetypes='*.txt'))
 
-
-	g.m.MLDMinimumSpin = pg.SpinBox(value=0, decimals=2, maximum=1000)
-	g.m.filterLayout.addWidget(QLabel('Mean Lag Distance Minimum:'), 0, 0)
-	g.m.filterLayout.addWidget(g.m.MLDMinimumSpin, 0, 1)
-	g.m.MLDMaximumSpin = pg.SpinBox(value=1000, decimals=2, maximum=1000)
-	g.m.filterLayout.addWidget(QLabel('Mean Lag Distance Maximum:'), 1, 0)
-	g.m.filterLayout.addWidget(g.m.MLDMaximumSpin, 1, 1)
-	g.m.neighborDistanceSpin = pg.SpinBox(value=100, decimals=2, maximum=100)
-	g.m.filterLayout.addWidget(QLabel('Max Neighborly Distance:'), 0, 2)
-	g.m.filterLayout.addWidget(g.m.neighborDistanceSpin, 0, 3)
-	g.m.minLengthSpin = pg.SpinBox(value=0, maximum=1000, int=True)
-	g.m.filterLayout.addWidget(QLabel('Minimum Track Length:'), 0, 4)
-	g.m.filterLayout.addWidget(g.m.minLengthSpin, 0, 5)
-	g.m.maxLengthSpin = pg.SpinBox(value=100, maximum=1000, int=True)
-	g.m.filterLayout.addWidget(QLabel('Maximum Track Length:'), 1, 4)
-	g.m.filterLayout.addWidget(g.m.maxLengthSpin, 1, 5)
-	g.m.MLDMaximumSpin.sigValueChanged.connect(g.m.trackPlot.filter)
-	g.m.MLDMinimumSpin.sigValueChanged.connect(g.m.trackPlot.filter)
+	
+	g.m.MSLDMinSpin.setOpts(value=0, decimals=2, maximum=1000)
+	
+	g.m.MSLDMaxSpin.setOpts(value=1000, decimals=2, maximum=1000)
+	
+	g.m.neighborDistanceSpin.setOpts(value=100, decimals=2, maximum=100)
+	
+	g.m.minLengthSpin.setOpts(value=0, maximum=1000, int=True)
+	
+	g.m.maxLengthSpin.setOpts(value=100, maximum=1000, int=True)
+	
+	g.m.MSLDMaxSpin.sigValueChanged.connect(g.m.trackPlot.filter)
+	g.m.MSLDMinSpin.sigValueChanged.connect(g.m.trackPlot.filter)
 	g.m.neighborDistanceSpin.sigValueChanged.connect(g.m.trackPlot.filter)
 	g.m.minLengthSpin.sigValueChanged.connect(g.m.trackPlot.filter)
 	g.m.maxLengthSpin.sigValueChanged.connect(g.m.trackPlot.filter)
@@ -188,6 +183,7 @@ def initializeMainGui():
 	g.m.ignoreOutsideCheck.toggled.connect(g.m.trackPlot.filter)
 	g.m.plotMeansCheck.toggled.connect(g.m.trackPlot.means.setVisible)
 	g.m.plotTracksCheck.toggled.connect(g.m.trackPlot.tracks.setVisible)
+	
 
 	g.m.viewTab.layout().insertWidget(0, g.m.trackView)
 
