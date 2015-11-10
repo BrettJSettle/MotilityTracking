@@ -20,6 +20,7 @@ import global_vars as g
 from window import Window
 from roi import load_roi, makeROI
 from CDF import *
+from sklearn.cluster import DBSCAN
 
 from histogram import Histogram
 from process.motility_ import *
@@ -54,7 +55,11 @@ class TrackPlot(pg.PlotDataItem):
 	def filter(self):
 		if self.waitForUpdate:
 			return
-		self.filtered_tracks = []
+		self.filtered_tracks = self.all_tracks[:]
+		if g.m.additionalGroupBox.isChecked():
+			filter_ids =  get_clusters()
+			self.filtered_tracks = [self.filtered_tracks[i] for i, cluster in enumerate(filter_ids) if cluster > 0]
+
 		for tr in self.all_tracks:
 			if isValidTrack(tr):
 				self.filtered_tracks.append(tr)
@@ -90,11 +95,10 @@ class TrackPlot(pg.PlotDataItem):
 
 
 def isValidTrack(track):
-	if g.m.MLDMinimumSpin.value() <= track['mean_dis_pixel_lag'] <= g.m.MLDMaximumSpin.value():
-		if all([v <= g.m.neighborDistanceSpin.value() for v in track['dis_pixel_lag']]):
-			if g.m.minLengthSpin.value() <= track['fr_length'] <= g.m.maxLengthSpin.value():
-				if not g.m.ignoreOutsideCheck.isChecked() or track_in_roi(track):
-					return True
+	if g.m.MSLDMinSpin.value() <= track['mean_dis_pixel_lag'] <= g.m.MSLDMaxSpin.value():
+		if not g.m.MSLDGroupBox.isChecked() or g.m.minLengthSpin.value() <= track['fr_length'] <= g.m.maxLengthSpin.value():
+			if not g.m.ignoreOutsideCheck.isChecked() or track_in_roi(track):
+				return True
 
 def export_real_distances(filename):
 	coords = g.m.trackView.imported.getData()
@@ -115,6 +119,14 @@ def import_mat(mat):
 	g.m.trackPlot.waitForUpdate = False
 
 	g.m.trackPlot.setTracks(main)
+
+def get_clusters():
+	neighbors = g.m.neighborsSpin.value()
+	dist = g.m.neighborDistanceSpin.value()
+	data = np.array([[tr['mean_x'], tr['mean_y']] for tr in g.m.trackPlot.filtered_tracks])
+	scanner = DBSCAN(dist, neighbors)
+	ids = scanner.fit_predict(data)
+	return labels
 
 def track_in_roi(track):
 	for roi in g.m.currentWindow.rois:

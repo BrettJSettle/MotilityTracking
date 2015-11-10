@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>865</width>
+    <width>886</width>
     <height>721</height>
    </rect>
   </property>
@@ -46,6 +46,9 @@
        <widget class="QGroupBox" name="groupBox_2">
         <property name="title">
          <string>Step 1: Track Lengths</string>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
         </property>
         <widget class="QLabel" name="label">
          <property name="geometry">
@@ -106,7 +109,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QGroupBox" name="groupBox_3">
+       <widget class="QGroupBox" name="MSDLGroupBox">
         <property name="minimumSize">
          <size>
           <width>0</width>
@@ -115,6 +118,12 @@
         </property>
         <property name="title">
          <string>Step 2: Sort Molecules by Mean SLD</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
         </property>
         <widget class="QLabel" name="label_3">
          <property name="geometry">
@@ -175,9 +184,15 @@
        </widget>
       </item>
       <item>
-       <widget class="QGroupBox" name="groupBox_4">
+       <widget class="QGroupBox" name="additionalGroupBox">
         <property name="title">
          <string>Additional Filters</string>
+        </property>
+        <property name="checkable">
+         <bool>true</bool>
+        </property>
+        <property name="checked">
+         <bool>false</bool>
         </property>
         <widget class="QLabel" name="label_5">
          <property name="geometry">
@@ -328,8 +343,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>865</width>
-     <height>21</height>
+     <width>886</width>
+     <height>38</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">
