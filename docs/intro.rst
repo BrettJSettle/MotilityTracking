@@ -1,12 +1,10 @@
-Introduction to Flika
-************************
-Flika was created in the `Parker Lab <http://parkerlab.bio.uci.edu/index.htm>`_ in order to detect and measure |Ca2+| puffs caused by |IP3| channel openings.  It is growing into a general analysis tool for biological movies.
+Introduction to Motility Tracking
+**********************************
+	This tracking program was created in the `Parker Lab <http://parkerlab.bio.uci.edu/index.htm>`_ to plot and analyze the motility of active points in cell movies.  The analysis is gathered from track lag data by plotting the Mean Squared Displacement Per Lag and a histogram of Mean Single Lag Distances.  Tracks can be filtered accordingly for analysis of immotile/extremely motile clusterings.
 
 Getting Started
 ===================
 Flika currently supports .tif files and .stk files.  To create a script, save a python file in the 'scripts' directory.  To run it, select 'Scripts', then click on the name of your script.
-
-
 
 Functions
 ===================

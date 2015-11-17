@@ -6,8 +6,6 @@
 Welcome to Flika's documentation!
 =================================
 
-
-
 Contents:
 
 .. toctree::
