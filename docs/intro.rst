@@ -6,6 +6,8 @@ Getting Started
 ===================
 Flika currently supports .tif files and .stk files.  To create a script, save a python file in the 'scripts' directory.  To run it, select 'Scripts', then click on the name of your script.
 
+
+
 Functions
 ===================
 File

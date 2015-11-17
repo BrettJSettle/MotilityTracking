@@ -67,5 +67,5 @@ develop-eggs/
 pip-log.txt
 
 #Ignore docs
-docs/*
+docs*
 !docs/index.rst
