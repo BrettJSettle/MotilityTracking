@@ -65,3 +65,7 @@ develop-eggs/
 
 # Installer logs
 pip-log.txt
+
+#Ignore docs
+docs/*
+!docs/index.rst
