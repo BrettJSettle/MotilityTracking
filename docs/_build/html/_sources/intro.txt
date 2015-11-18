@@ -4,11 +4,11 @@ Introduction to Motility Tracking
 
 Getting Started
 ===================
-Flika currently supports .tif files and .stk files.  To create a script, save a python file in the 'scripts' directory.  To run it, select 'Scripts', then click on the name of your script.
+Motility Tracking currently only supports .bin files exported from Origin. 
 
-Functions
+Steps
 ===================
-File
+Import a Tracks File
 ----------------
 .. py:module:: file
 .. autofunction:: open_file
