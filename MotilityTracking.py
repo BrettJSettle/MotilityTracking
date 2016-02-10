@@ -108,7 +108,7 @@ def export_real_distances(filename):
 
 	coords = g.m.trackView.imported.getData()
 	means = g.m.trackPlot.means.getData()
-	if np.size(coords) == 0 || np.size(means) == 0:
+	if np.size(coords) == 0 or np.size(means) == 0:
 		print("Must have track means and imported coordinates to export distances between them")
 	else:
 		export_distances(filename, means, coords)

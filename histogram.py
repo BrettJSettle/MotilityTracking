@@ -21,7 +21,7 @@ class Histogram(pg.PlotWidget):
 		if len(data) == 0:
 			data = self.plot_data
 
-		minimum = np.min(data)
+		minimum = 0
 		maximum = np.max(data)
 
 		# if this is the first histogram plotted,
