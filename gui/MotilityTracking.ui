@@ -189,11 +189,6 @@
           <string>min                   max</string>
          </property>
         </widget>
-        <zorder>label_3</zorder>
-        <zorder>MSLDMinSpin</zorder>
-        <zorder>MSLDMaxSpin</zorder>
-        <zorder>label_4</zorder>
-        <zorder>groupBox_2</zorder>
        </widget>
       </item>
       <item>
@@ -448,7 +443,7 @@
   </action>
   <action name="actionExportHistogram">
    <property name="text">
-    <string>Export Histogram Values</string>
+    <string>Export Mean Single Lag Distances</string>
    </property>
   </action>
   <action name="actionExportOutlined">

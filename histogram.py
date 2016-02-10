@@ -82,7 +82,7 @@ class Histogram(pg.PlotWidget):
 			edit_histogram_gui(self)
 
 	def export(self, filename):
-		np.savetxt(filename, self.plot_data, header='Histogram Values')
+		np.savetxt(filename, self.plot_data, header='Mean Single Lag Distances')
 
 def edit_histogram_gui(hist):
 	items = []
