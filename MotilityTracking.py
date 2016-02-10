@@ -105,9 +105,13 @@ def isValidTrack(track):
 	return False
 
 def export_real_distances(filename):
+
 	coords = g.m.trackView.imported.getData()
 	means = g.m.trackPlot.means.getData()
-	export_distances(filename, means, coords)
+	if np.size(coords) == 0 || np.size(means) == 0:
+		print("Must have track means and imported coordinates to export distances between them")
+	else:
+		export_distances(filename, means, coords)
 
 def import_mat(mat):
 	if len(mat) == 0:
@@ -166,6 +170,8 @@ def initializeMainGui():
 	g.m.trackPlot = TrackPlot()
 	g.m.trackPlot.tracksChanged.connect(update_plots)
 	g.m.trackView.imageview.addItem(g.m.trackPlot)
+	g.m.trackView.imported = pg.ScatterPlotItem()
+	g.m.trackView.imageview.addItem(g.m.trackView.imported)
 
 	g.m.actionImportBin.triggered.connect(lambda : open_file_gui(lambda f: import_mat(open_bin(f)),  prompt='Import .bin file of tracks', filetypes='*.bin'))
 	g.m.actionImportBackground.triggered.connect(lambda : open_file_gui(set_background_image,  prompt='Select tif file as background image', filetypes='*.tif *.tiff *.stk'))

@@ -27,18 +27,12 @@ class Window(QWidget):
         self.commands=commands #commands is a list of the commands used to create this window, starting with loading the file
         self.metadata=metadata
         self.image=tif
-        if g.m.currentWindow is None:
-            width=684
-            height=585
-            nwindows=len(g.m.windows)
-            x=10+10*nwindows
-            y=484+10*nwindows
-        else:
-            oldGeometry=g.m.currentWindow.geometry()
-            width=oldGeometry.width()
-            height=oldGeometry.height()
-            x=oldGeometry.x()+10
-            y=oldGeometry.y()+10
+
+        width=684
+        height=585
+        x=10+10
+        y=484+10
+        
         self.name=name
         self.filename=filename
         self.setAsCurrentWindow()
@@ -90,8 +84,7 @@ class Window(QWidget):
         self.imageview.addItem(self.scatterPlot)
         self.pasteAct = QAction("&Paste", self, triggered=self.paste)
         self.sigTimeChanged.connect(self.showFrame)
-        if self not in g.m.windows:
-            g.m.windows.append(self)
+        
         self.closed=False
         self.show()
         
@@ -126,11 +119,8 @@ class Window(QWidget):
             self.imageview.setImage(np.zeros((2,2))) #clear the memory
             self.imageview.close()
             del self.imageview
-            g.m.setWindowTitle("FLIKA")
-            if g.m.currentWindow==self:
-                g.m.currentWindow = None
-            if self in g.m.windows:
-                g.m.windows.remove(self)
+            g.m.setWindowTitle("Motility Tracking")
+        
             self.closed=True
             event.accept() # let the window close
             
@@ -151,9 +141,6 @@ class Window(QWidget):
         self.setAsCurrentWindow()
         
     def setAsCurrentWindow(self):
-        if g.m.currentWindow is not None:
-            g.m.currentWindow.setStyleSheet("border:1px solid rgb(0, 0, 0); ")
-        g.m.currentWindow = self
         g.m.setWindowTitle("FLIKA - {}".format(os.path.basename(self.name)))
         self.setStyleSheet("border:1px solid rgb(0, 255, 0); ")
         g.m.windowSelectedSignal.sig.emit()

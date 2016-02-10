@@ -147,20 +147,16 @@ def import_coords(filename):
 		x, y = np.transpose(data)
 	except:
 		print('%s has more than 2 columns of values. Must import X,Y coordinates only' % filename)
-	if not hasattr(g.m.trackView, 'imported'):
-		plotItem = pg.ScatterPlotItem(x=x, y=y)
-		g.m.trackView.addItem(plotItem)
-		g.m.trackView.imported = plotItem
-	else:
-		g.m.trackView.imported.setData(x=x, y=y)
+	g.m.trackView.imported.setData(x=x, y=y)
 
 def export_distances(filename, ptsA, ptsB):
+	print(ptsA, ptsB)
 	t = time.time()
 	with open(filename, 'w') as outf:
 		outf.write('Distances\n')
-		for i, pt in enumerate(coords):
-			for j in range(len(rand_means)):
-				outf.write('%.3f\n' % np.linalg.norm(np.subtract(pt, rand_means[j])))
+		for i, pt in enumerate(ptsA):
+			for j in range(len(ptsB)):
+				outf.write('%.3f\n' % np.linalg.norm(np.subtract(pt, ptsB[j])))
 	g.m.statusBar().showMessage('Successfully saved simulated distances in {}'.format(time.time() - t))
 
 def export_track_lengths(filename):
