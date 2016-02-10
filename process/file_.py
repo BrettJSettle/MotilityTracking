@@ -150,7 +150,6 @@ def import_coords(filename):
 	g.m.trackView.imported.setData(x=x, y=y)
 
 def export_distances(filename, ptsA, ptsB):
-	print(ptsA, ptsB)
 	t = time.time()
 	with open(filename, 'w') as outf:
 		outf.write('Distances\n')
