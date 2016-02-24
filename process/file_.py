@@ -23,7 +23,7 @@ import tifffile
 import json
 import re
 
-__all__ = ['open_file_gui','open_file','save_file_gui', 'close', 'simulate_distances', 'exportMSD', 'export_distances', 'import_coords', 'export_track_lengths']
+__all__ = ['open_file_gui','open_file','save_file_gui', 'close', 'simulate_distances', 'exportMSD', 'export_distances', 'import_coords', 'export_track_lengths','set_background_image']
 
 def open_file_gui(func, filetypes, prompt='Open File'):
 	filename=g.m.filename
@@ -64,9 +64,8 @@ def open_file(filename):
 		metadata = txt2dict(metadata)
 	except AttributeError:
 		metadata=dict()
-	tif=Tiff.asarray().astype(g.m.settings['internal_data_type'])
+	tif=Tiff.asarray()
 	Tiff.close()
-	#tif=imread(filename,plugin='tifffile').astype(g.m.settings['internal_data_type'])
 	if len(tif.shape)>3: # WARNING THIS TURNS COLOR movies TO BLACK AND WHITE BY AVERAGING ACROSS THE THREE CHANNELS
 		if 'channels' in metadata.keys() and 'ImageJ' in metadata.keys():
 			tif=np.transpose(tif,(0,3,2,1))

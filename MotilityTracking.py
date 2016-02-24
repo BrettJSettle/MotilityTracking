@@ -4,9 +4,9 @@ Created on Thu Jun 26 14:17:38 2014
 updated 2015.01.27
 @author: Kyle Ellefsen
 """
-from __future__ import (absolute_import, division,print_function, unicode_literals)
+from __future__ import (absolute_import, division,print_function)
 import dependency_check
-from future.builtins import (bytes, dict, int, list, object, range, str, ascii, chr, hex, input, next, oct, open, pow, round, super, filter, map, zip)
+from future.builtins import (bytes, dict, int, list, object, range, str, ascii, chr, hex, input, next, oct, pow, round, super, filter, map, zip)
 import time
 tic=time.time()
 import os, sys
