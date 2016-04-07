@@ -86,15 +86,34 @@ class TrackPlot(pg.PlotDataItem):
         self.means.setData(x=mean_x, y=mean_y, symbol='x', brush=(255, 0, 0), pen=(255, 0, 0))
     
     def export(self, filename, filtered=False):
-        tracks = self.all_tracks if not filtered else seld.filtered_tracks
+        tracks = self.all_tracks if not filtered else self.filtered_tracks
         g.m.statusBar().showMessage('Saving tracks to {}'.format(os.path.basename(filename)))
         t = time.time()
         with open(filename, 'w') as outf:
             for tr in tracks:
-                outf.write('\n'.join(['%.4f\t%.4f' % x, y in zip(tr['x_cor'], tr['y_cor'])]))
+                outf.write('\n'.join(         ['{0:.4f}\t{1:.4f}\t{2:.4f}'.format(t,x,y) for t,x,y in zip(tr['frames'], tr['x_cor'], tr['y_cor'])]       ))
+                outf.write('\n')
             outf.write('\n')
 
         g.m.statusBar().showMessage('Successfully saved tracks in {}'.format(time.time() - t))
+    def export_gui(self):
+        filename=g.m.filename
+        try:
+            directory=os.path.dirname(filename)
+        except:
+            directory = ''
+        prompt = 'Export Plotted Tracks'
+        filetypes='*.txt'
+        if filename is not None and directory != '':
+            filename= QFileDialog.getSaveFileName(g.m, prompt, directory, filetypes)
+        else:
+            filename= QFileDialog.getSaveFileName(g.m, prompt, filetypes)
+        filename=str(filename)
+        if filename != '':
+            self.export(filename,filtered=True)
+            g.m.filename = filename
+        else:
+            g.m.statusBar().showMessage('Save Cancelled')
 
 
 def isValidTrack(track):
@@ -142,8 +161,8 @@ def track_in_roi(track):
             return True
     return False
 
-def updateMSD(par_det):
-    x, y, er = calculate_MSD_plot(par_det, [g.m.minLengthSpin.value(), g.m.maxLengthSpin.value()])
+def updateMSD(tracks):
+    x, y, er = calculate_MSD_plot(tracks, [g.m.minLengthSpin.value(), g.m.maxLengthSpin.value()])
     g.m.MSDWidget.clear()
     err = pg.ErrorBarItem(x=x, y=y, top=er, bottom=er, beam=0.5)
     g.m.MSDWidget.plot_data = {'er': er, 'x': x, 'y': y}
@@ -180,7 +199,7 @@ def initializeMainGui():
     g.m.actionExportMSD.triggered.connect(lambda : save_file_gui(exportMSD, prompt='Export Mean Squared Displacement Values', filetypes='*.txt'))
     g.m.actionExportHistogram.triggered.connect(lambda : save_file_gui(g.m.histogram.export, prompt='Export Histogram Values', filetypes='*.txt'))
     g.m.actionExportTrackLengths.triggered.connect(lambda : save_file_gui(export_track_lengths, prompt='Export Track Lengths', filetypes='*.txt'))
-    g.m.actionExportOutlined.triggered.connect(lambda : g.m.trackPlot.export(filtered=True))
+    g.m.actionExportOutlined.triggered.connect(g.m.trackPlot.export_gui)
     g.m.actionExportDistances.triggered.connect(lambda : save_file_gui(export_real_distances,  prompt='Export Distances', filetypes='*.txt'))
     
     g.m.MSLDMinSpin.setOpts(value=0, decimals=2, maximum=1000)
@@ -234,6 +253,7 @@ class MainWindowEventEater(QObject):
                 filename=url.toString()
                 filename=filename.split('file:///')[1]
                 print('filename={}'.format(filename))
+                g.m.filename=filename
                 import_mat(bin2mat(filename))  #This fails on windows symbolic links.  http://stackoverflow.com/questions/15258506/os-path-islink-on-windows-with-python
                 g.m.setWindowTitle('Motility Tracking - ' + filename)
                 event.accept()

@@ -141,7 +141,6 @@ class Window(QWidget):
         self.setAsCurrentWindow()
         
     def setAsCurrentWindow(self):
-        g.m.setWindowTitle("FLIKA - {}".format(os.path.basename(self.name)))
         self.setStyleSheet("border:1px solid rgb(0, 255, 0); ")
         g.m.windowSelectedSignal.sig.emit()
     

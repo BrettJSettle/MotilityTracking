@@ -205,7 +205,7 @@ def bin2mat(infile):
             MList.append(mol)
 
     
-    print("Loaded %s molecules".format(len(MList)))
+    print("Loaded {} molecules".format(len(MList)))
     return MList
     
 if __name__=='__main__':

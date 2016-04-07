@@ -19,6 +19,7 @@ def open_bin(filename):
     t = time.time()
     mat = bin2mat(filename)
     g.m.statusBar().showMessage('{} successfully loaded ({} s)'.format(os.path.basename(filename), time.time()-t))
+    g.m.setWindowTitle('Motility Tracking - ' + filename)
     return mat
     
 
@@ -85,44 +86,26 @@ def create_main_data_struct(mlist, ltl, utl):
 
     return par_det, reject_track, rt
 
-def calculate_MSD_plot(pcl, lag_range):
-    pcl_2 = []
-    for i in range(len(pcl)):
-        pos_x = pcl[i]['x_cor']
-        pos_y = pcl[i]['y_cor']
-
-        Nt =np.size(pos_x, 0)-1
-        pcl_2.append({'max_lag_num': Nt, 'dist_sqr': np.zeros((Nt, Nt)), 'mean_dist_sqr': np.zeros((Nt))})
-        for n in range(Nt):
-            Na = Nt-n
-            sp = 0
-            for j in range(Na):
-                pcl_2[i]['dist_sqr'][j][n] = (pos_x[sp+n]-pos_x[sp])**2+(pos_y[sp+n]-pos_y[sp])**2
-                sp += 1
-            proxy_mean = pcl_2[i]['dist_sqr'][n]
-            proxy_mean = proxy_mean[np.where(proxy_mean != 0)[0]]
-            pcl_2[i]['mean_dist_sqr'][n] = np.average(proxy_mean)
-
-    x = range(1,lag_range[1])
-    count = np.zeros((lag_range[1]-1,))
-    mean_msd = np.zeros((lag_range[1]-1,))
-
-    for i in range(len(pcl_2)):
-        pointer = pcl_2[i]['max_lag_num']
-        if lag_range[0] <= pointer <= lag_range[1]:
-            for j in range(pointer-1):
-                count[j] += 1
-                mean_msd[j] = mean_msd[j] + pcl[i]['mean_dist_sqr'][j]
-    mean_msd /= count
-    #mean_msd *= .166 * .166
-    mean_msd[np.isnan(mean_msd)] = 0
-    er = mean_msd / np.sqrt(count)
-
-    x = np.array(x)
-    y = np.array(mean_msd)
-    er = np.array(er)
-
-    return x, y, er
+def calculate_MSD_plot(tracks, lag_range):
+    distances_sq_by_lag = [ [] for i in range(10) ] 
+    for i in range(len(tracks)):
+        x = tracks[i]['x_cor']
+        y = tracks[i]['y_cor']
+        nLags=len(x)
+        if lag_range[0]<=nLags<=lag_range[1]:
+            for i in np.arange(nLags):
+                for j in np.arange(nLags):
+                    if j>=i:
+                        distance_sq=(x[i]-x[j])**2+(y[i]-y[j])**2
+                        while len(distances_sq_by_lag)<=j-i:
+                            distances_sq_by_lag.append([])
+                        distances_sq_by_lag[j-i].append(distance_sq)
+    
+    lags     =  np.arange(len(distances_sq_by_lag))
+    means    =  np.array([ np.mean(distances_sq_by_lag[lag])                      for lag in lags])
+    counts   =  np.array([     len(distances_sq_by_lag[lag])                      for lag in lags])
+    std_errs =  np.array([  np.std(distances_sq_by_lag[lag])/np.sqrt(counts[lag]) for lag in lags])
+    return lags, means, std_errs
 
 from functools import reduce
 
