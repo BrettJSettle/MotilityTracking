@@ -202,12 +202,12 @@ def initializeMainGui():
     g.m.actionExportOutlined.triggered.connect(g.m.trackPlot.export_gui)
     g.m.actionExportDistances.triggered.connect(lambda : save_file_gui(export_real_distances,  prompt='Export Distances', filetypes='*.txt'))
     
-    g.m.MSLDMinSpin.setOpts(value=0, decimals=2, maximum=1000)
-    g.m.MSLDMaxSpin.setOpts(value=100, decimals=2, maximum=1000)
-    g.m.neighborsSpin.setOpts(value=0, maximum=100, int=True, step=1)
-    g.m.neighborDistanceSpin.setOpts(value=1, decimals=2, maximum=100)
-    g.m.minLengthSpin.setOpts(value=4, maximum=1000, int=True, step=1)
-    g.m.maxLengthSpin.setOpts(value=20, maximum=1000, int=True, step=1)
+    g.m.MSLDMinSpin.setOpts(value=0, decimals=2, bounds=(0, 100))
+    g.m.MSLDMaxSpin.setOpts(value=100, decimals=2, bounds=(0, 100))
+    g.m.neighborsSpin.setOpts(value=0, bounds=(0, 100), int=True, step=1)
+    g.m.neighborDistanceSpin.setOpts(value=1, decimals=2, bounds=(0, 100))
+    g.m.minLengthSpin.setOpts(value=4, bounds=(0, 1000), int=True, step=1)
+    g.m.maxLengthSpin.setOpts(value=20, bounds=(0, 1000), int=True, step=1)
 
     g.m.MSLDGroupBox.toggled.connect(g.m.trackPlot.filter)
     g.m.additionalGroupBox.toggled.connect(g.m.trackPlot.filter)
